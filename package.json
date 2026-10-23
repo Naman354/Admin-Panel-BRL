@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run server:dev\" \"npm run client:dev\"",
+    "build": "npm run client:build",
     "client:dev": "vite",
     "client:build": "tsc -b && vite build",
     "client:preview": "vite preview",

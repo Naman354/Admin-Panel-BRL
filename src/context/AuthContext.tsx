@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err: any) {
       return {
         success: false,
-        message: err.message || 'Invalid credentials. Check ADMIN_PASSWORD in .env',
+        message: err.message || 'Invalid credentials. Please check your username and password.',
       };
     }
   };

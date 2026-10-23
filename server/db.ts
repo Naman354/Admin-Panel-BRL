@@ -70,6 +70,11 @@ export function mapRegistrationDoc(doc: any) {
 }
 
 export async function initDatabase() {
+  if (mongoose.connection.readyState >= 1) {
+    isMongoConnected = true;
+    return;
+  }
+
   const uri = process.env.MONGODB_URI;
   activeDbName = process.env.DB_NAME || 'EXPERT-SEMINAR-REGISTRATION';
 

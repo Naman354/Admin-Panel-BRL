@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Lock, User, Eye, EyeOff, Sparkles, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
-  const [username, setUsername] = useState('admin');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -12,28 +12,23 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password) {
-      setError('Please enter your password to continue.');
+    if (!username.trim() || !password) {
+      setError('Please enter both your username and password.');
       return;
     }
 
     try {
       setIsLoading(true);
       setError(null);
-      const res = await login(password, username);
+      const res = await login(password, username.trim());
       if (!res.success) {
-        setError(res.message || 'Incorrect password. Please try again.');
+        setError(res.message || 'Incorrect credentials. Please try again.');
       }
     } catch (err: any) {
       setError(err?.message || 'Could not sign in. Please verify your connection.');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleQuickFill = () => {
-    setUsername('admin');
-    setPassword('admin@portal2026');
   };
 
   return (
@@ -152,11 +147,12 @@ export const LoginPage: React.FC = () => {
               <input
                 type="text"
                 className="input-control"
-                placeholder="e.g. admin"
+                placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 style={{ paddingLeft: '40px' }}
                 autoComplete="username"
+                required
               />
               <User
                 size={18}
@@ -221,45 +217,6 @@ export const LoginPage: React.FC = () => {
             )}
           </button>
         </form>
-
-        {/* Demo Helper Box */}
-        <div
-          style={{
-            marginTop: '22px',
-            padding: '12px 14px',
-            borderRadius: '12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '4px' }}>
-            <Sparkles size={13} color="#4f46e5" />
-            <span style={{ fontSize: '12px', fontWeight: '700', color: '#334155' }}>
-              Default Sign-in Info
-            </span>
-          </div>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 8px' }}>
-            Username: <strong style={{ color: '#0f172a' }}>admin</strong> &nbsp;·&nbsp; Password:{' '}
-            <strong style={{ color: '#4f46e5' }}>admin@portal2026</strong>
-          </p>
-          <button
-            type="button"
-            onClick={handleQuickFill}
-            style={{
-              background: '#e0e7ff',
-              border: '1px solid #c7d2fe',
-              borderRadius: '6px',
-              padding: '5px 12px',
-              color: '#3730a3',
-              fontSize: '11px',
-              fontWeight: '700',
-              cursor: 'pointer',
-            }}
-          >
-            Fill Credentials
-          </button>
-        </div>
       </div>
     </div>
   );
