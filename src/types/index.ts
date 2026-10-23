@@ -1,0 +1,75 @@
+export interface Participant {
+  _id?: string;
+  studentNumber: string;
+  studentNo?: string;
+  rollNo?: string;
+  fullName: string;
+  email: string;
+  phoneNumber?: string;
+  branch: string;
+  year: number;
+  gender: 'Male' | 'Female' | 'Other';
+  residency: 'Hosteler' | 'Day Scholar';
+  barcode: string;
+  category?: 'Student' | 'VIP' | 'Delegate' | 'Volunteer';
+  tShirtSize?: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  attendance: {
+    marked: boolean;
+    markedAt: string | null;
+    markedMethod: 'BARCODE' | 'MANUAL' | null;
+    markedBy: string | null;
+  };
+  registeredAt: string;
+}
+
+export interface MetricsData {
+  overview: {
+    totalRegistrations: number;
+    totalPresent: number;
+    totalAbsent: number;
+    attendanceRate: number;
+    barcodeScans: number;
+    manualCheckIns: number;
+  };
+  genderDistribution: {
+    name: string;
+    count: number;
+    percentage: number;
+  }[];
+  residencyDistribution: {
+    name: string;
+    count: number;
+    percentage: number;
+  }[];
+  branchDistribution: {
+    name: string;
+    total: number;
+    present: number;
+    percentage: number;
+  }[];
+  yearDistribution: {
+    name: string;
+    year: number;
+    count: number;
+    percentage: number;
+  }[];
+  recentCheckIns: Participant[];
+  timeline: {
+    date: string;
+    count: number;
+  }[];
+}
+
+export interface AttendanceResult {
+  success: boolean;
+  message: string;
+  error?: 'PARTICIPANT_NOT_FOUND' | 'ALREADY_MARKED' | 'MISSING_IDENTIFIER' | string;
+  participant?: Participant;
+}
+
+export interface DatabaseStatus {
+  isMongoConnected: boolean;
+  mode: string;
+  mongoConnectionError: string | null;
+  uriConfigured: boolean;
+}
