@@ -68,7 +68,7 @@ export const AttendancePage: React.FC = () => {
       setLastResult({
         success: false,
         error: 'NETWORK_ERROR',
-        message: err?.message || 'Error processing attendance',
+        message: err?.message || 'Unable to complete check-in. Please check your connection.',
       });
     } finally {
       setIsSubmitting(false);
@@ -100,7 +100,7 @@ export const AttendancePage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Live Event Attendance Progress Bar */}
+      {/* Live Event Attendance Status Bar */}
       <div
         className="glass-card"
         style={{
@@ -133,7 +133,7 @@ export const AttendancePage: React.FC = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-                BRL Attendance Station
+                Live Check-in Desk
               </h3>
               <span
                 style={{
@@ -146,11 +146,11 @@ export const AttendancePage: React.FC = () => {
                   border: '1px solid #a7f3d0',
                 }}
               >
-                ● Live Event Check-in
+                ● Ready for Students
               </span>
             </div>
             <p style={{ fontSize: '12px', color: '#475569', margin: '2px 0 0' }}>
-              Verify barcodes printed on emails or manually enter Student ID
+              Scan confirmation barcodes from students' phones or look them up by student number.
             </p>
           </div>
         </div>
@@ -161,10 +161,10 @@ export const AttendancePage: React.FC = () => {
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="btn btn-secondary"
             style={{ fontSize: '12px', padding: '8px 12px' }}
-            title={soundEnabled ? 'Audio Chime Enabled' : 'Audio Muted'}
+            title={soundEnabled ? 'Chime sound is enabled for check-ins' : 'Sound is muted'}
           >
             {soundEnabled ? <Volume2 size={16} color="#059669" /> : <VolumeX size={16} color="#94a3b8" />}
-            <span>{soundEnabled ? 'Audio On' : 'Audio Muted'}</span>
+            <span>{soundEnabled ? 'Sound On' : 'Sound Muted'}</span>
           </button>
 
           {/* Attendance Stats Pill */}
@@ -179,11 +179,11 @@ export const AttendancePage: React.FC = () => {
             }}
           >
             <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '600' }}>
-              Total Checked In
+              Turnout Today
             </span>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', justifyContent: 'flex-end' }}>
               <span style={{ fontSize: '20px', fontWeight: '800', color: '#059669' }}>{stats.present}</span>
-              <span style={{ fontSize: '13px', color: '#64748b' }}>/ {stats.total}</span>
+              <span style={{ fontSize: '13px', color: '#64748b' }}>/ {stats.total} checked in</span>
               <span style={{ fontSize: '12px', fontWeight: '700', color: '#0284c7' }}>
                 ({stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0}%)
               </span>
@@ -201,7 +201,7 @@ export const AttendancePage: React.FC = () => {
 
           {/* Method 2: Manual Student Number Entry */}
           <div className="glass-card" style={{ padding: '24px', background: '#ffffff' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
               <div
                 style={{
                   width: '32px',
@@ -221,7 +221,7 @@ export const AttendancePage: React.FC = () => {
                   Manual Roll Number Entry
                 </h4>
                 <p style={{ fontSize: '12px', color: '#64748b', margin: '1px 0 0' }}>
-                  Enter Student No or Roll No (e.g. 2510074 or 2500270100055)
+                  If a student doesn't have their email barcode ready, enter their Student No or Roll No
                 </p>
               </div>
             </div>
@@ -232,7 +232,7 @@ export const AttendancePage: React.FC = () => {
                   ref={manualInputRef}
                   type="text"
                   className="input-control"
-                  placeholder="Enter Student No or Roll No..."
+                  placeholder="e.g. 2510074 or 2410082..."
                   value={manualInput}
                   onChange={(e) => setManualInput(e.target.value)}
                   style={{
@@ -259,7 +259,7 @@ export const AttendancePage: React.FC = () => {
             {/* Quick Live Registered IDs */}
             <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid #f1f5f9' }}>
               <p style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px', fontWeight: '700' }}>
-                💡 Live Registered Student Numbers in MongoDB:
+                💡 Click any registered student to test check-in:
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {['2510074', '2413096', '2413031', '2410082'].map((roll) => (
@@ -330,14 +330,14 @@ export const AttendancePage: React.FC = () => {
                         fontSize: '11px',
                         fontWeight: '800',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
+                        letterSpacing: '0.08em',
                         color: '#065f46',
                       }}
                     >
-                      Attendance Verified Successfully
+                      Check-in Confirmed
                     </span>
                     <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', margin: '2px 0 0' }}>
-                      {lastResult.participant.fullName}
+                      Welcome, {lastResult.participant.fullName}! 🎉
                     </h3>
                   </div>
                 </div>
@@ -371,21 +371,21 @@ export const AttendancePage: React.FC = () => {
                     <div>
                       <span style={{ fontSize: '11px', color: '#64748b' }}>Branch & Year</span>
                       <p style={{ fontSize: '14px', fontWeight: '700', color: '#0f172a', margin: '2px 0 0' }}>
-                        {lastResult.participant.branch} (Y{lastResult.participant.year})
+                        {lastResult.participant.branch} (Year {lastResult.participant.year})
                       </p>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '11px', color: '#64748b' }}>Residency Type</span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Living Status</span>
                       <p style={{ fontSize: '14px', fontWeight: '700', color: '#334155', margin: '2px 0 0' }}>
                         {lastResult.participant.residency}
                       </p>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '11px', color: '#64748b' }}>Check-in Method</span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Verified Via</span>
                       <p style={{ fontSize: '14px', fontWeight: '800', color: '#059669', margin: '2px 0 0' }}>
-                        {lastResult.participant.attendance.markedMethod}
+                        {lastResult.participant.attendance.markedMethod === 'BARCODE' ? 'Barcode Scan' : 'Manual Entry'}
                       </p>
                     </div>
                   </div>
@@ -393,14 +393,14 @@ export const AttendancePage: React.FC = () => {
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '12px', color: '#065f46', fontWeight: '700' }}>
-                    Check-in Recorded: {new Date().toLocaleTimeString()}
+                    Recorded at {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </span>
                   <button
                     onClick={() => setLastResult(null)}
                     className="btn btn-secondary"
                     style={{ fontSize: '12px', padding: '6px 14px' }}
                   >
-                    Dismiss
+                    Next Student
                   </button>
                 </div>
               </div>
@@ -439,14 +439,14 @@ export const AttendancePage: React.FC = () => {
                         fontSize: '11px',
                         fontWeight: '800',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
+                        letterSpacing: '0.08em',
                         color: '#b45309',
                       }}
                     >
-                      DUPLICATE CHECK-IN REJECTED
+                      Already Checked In
                     </span>
                     <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#92400e', margin: '2px 0 0' }}>
-                      Attendance Already Marked!
+                      Duplicate Check-in Rejected
                     </h3>
                   </div>
                 </div>
@@ -464,14 +464,17 @@ export const AttendancePage: React.FC = () => {
                     {lastResult.message}
                   </p>
                   <p style={{ fontSize: '12px', color: '#78350f', margin: 0 }}>
-                    Strict Policy: Attendance can only be marked once per participant.
+                    Each attendee can only be checked in once to prevent duplicate entries.
                   </p>
                   {lastResult.participant?.attendance?.markedAt && (
                     <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #fef3c7' }}>
-                      <span style={{ fontSize: '11px', color: '#92400e' }}>Original Check-in Timestamp:</span>
+                      <span style={{ fontSize: '11px', color: '#92400e', fontWeight: '600' }}>First Check-in Time:</span>
                       <p style={{ fontSize: '13px', fontWeight: '800', color: '#0f172a', margin: '2px 0 0' }}>
-                        {new Date(lastResult.participant.attendance.markedAt).toLocaleString()} via{' '}
-                        {lastResult.participant.attendance.markedMethod}
+                        {new Date(lastResult.participant.attendance.markedAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}{' '}
+                        via {lastResult.participant.attendance.markedMethod === 'BARCODE' ? 'Barcode' : 'Manual entry'}
                       </p>
                     </div>
                   )}
@@ -483,7 +486,7 @@ export const AttendancePage: React.FC = () => {
                     className="btn btn-secondary"
                     style={{ fontSize: '12px', padding: '6px 14px' }}
                   >
-                    Acknowledge
+                    Got it
                   </button>
                 </div>
               </div>
@@ -522,20 +525,20 @@ export const AttendancePage: React.FC = () => {
                         fontSize: '11px',
                         fontWeight: '800',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
+                        letterSpacing: '0.08em',
                         color: '#b91c1c',
                       }}
                     >
-                      PARTICIPANT NOT FOUND
+                      No Match Found
                     </span>
                     <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#991b1b', margin: '2px 0 0' }}>
-                      Unregistered Barcode / ID
+                      Student Not Registered
                     </h3>
                   </div>
                 </div>
 
                 <p style={{ fontSize: '13px', color: '#b91c1c', marginBottom: '16px', fontWeight: '500' }}>
-                  {lastResult.message || 'No attendee record found in MongoDB matching this code.'}
+                  We couldn't find a registration for this barcode or student number. Check for typos, or register them on the spot as a walk-in attendee.
                 </p>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -544,7 +547,7 @@ export const AttendancePage: React.FC = () => {
                     className="btn btn-primary"
                     style={{ fontSize: '12px', padding: '8px 14px' }}
                   >
-                    <span>Register Walk-in Now</span>
+                    <span>Register Walk-in</span>
                   </button>
 
                   <button
@@ -584,10 +587,10 @@ export const AttendancePage: React.FC = () => {
                 <ScanLine size={30} />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a', marginBottom: '6px' }}>
-                Ready to Verify Attendees
+                Ready to Check In Students
               </h4>
               <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '340px', margin: '0 auto 16px' }}>
-                Aim badge barcode at the webcam, scan with handheld scanner gun, or enter Student ID on the left.
+                Scan a student's confirmation barcode using the camera, plug in a scanner gun, or look them up by student number.
               </p>
               <div
                 style={{
@@ -604,7 +607,7 @@ export const AttendancePage: React.FC = () => {
                 }}
               >
                 <Sparkles size={14} color="#4f46e5" />
-                <span>Strict Single Check-In enforcement active</span>
+                <span>Single check-in protection is active</span>
               </div>
             </div>
           )}
@@ -614,12 +617,12 @@ export const AttendancePage: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
               <div>
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-                  Live Venue Stream
+                  Today's Arrivals
                 </h4>
-                <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Attendees verified during this session</p>
+                <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Students checked in during this session</p>
               </div>
               <span style={{ fontSize: '12px', color: '#059669', fontWeight: '800' }}>
-                {stats.present} Total Present
+                {stats.present} Checked In
               </span>
             </div>
 
@@ -627,7 +630,7 @@ export const AttendancePage: React.FC = () => {
               {recentScans.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
                   <Clock size={28} style={{ marginBottom: '6px', opacity: 0.5 }} />
-                  <p style={{ fontSize: '13px' }}>Awaiting first check-in...</p>
+                  <p style={{ fontSize: '13px', margin: 0 }}>Waiting for first attendee to arrive...</p>
                 </div>
               ) : (
                 recentScans.map((p) => (
@@ -684,7 +687,7 @@ export const AttendancePage: React.FC = () => {
                           fontWeight: '700',
                         }}
                       >
-                        {p.attendance.markedMethod || 'BARCODE'}
+                        {p.attendance.markedMethod === 'BARCODE' ? 'Barcode' : 'Manual'}
                       </span>
                       <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0' }}>
                         {p.attendance.markedAt

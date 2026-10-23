@@ -20,8 +20,8 @@ export const ResidencyChart: React.FC<ResidencyChartProps> = ({ data }) => {
     <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '20px' }}>
         <div>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Residency Distribution</h4>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Campus Hostelers vs Local Day Scholars</p>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Living on Campus vs Commuting</h4>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Hostel residents vs students commuting from home</p>
         </div>
         <span
           style={{
@@ -33,7 +33,7 @@ export const ResidencyChart: React.FC<ResidencyChartProps> = ({ data }) => {
             borderRadius: '6px',
           }}
         >
-          Total: {total}
+          {total} students total
         </span>
       </div>
 
@@ -101,7 +101,7 @@ export const ResidencyChart: React.FC<ResidencyChartProps> = ({ data }) => {
             </div>
             <div>
               <p style={{ fontSize: '13px', fontWeight: '700', color: '#5b21b6', margin: 0 }}>Hostelers</p>
-              <p style={{ fontSize: '11px', color: '#7c3aed', margin: 0 }}>On-campus</p>
+              <p style={{ fontSize: '11px', color: '#7c3aed', margin: 0 }}>Living on Campus</p>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
@@ -140,7 +140,7 @@ export const ResidencyChart: React.FC<ResidencyChartProps> = ({ data }) => {
             </div>
             <div>
               <p style={{ fontSize: '13px', fontWeight: '700', color: '#0369a1', margin: 0 }}>Day Scholars</p>
-              <p style={{ fontSize: '11px', color: '#0284c7', margin: 0 }}>Commuters</p>
+              <p style={{ fontSize: '11px', color: '#0284c7', margin: 0 }}>Commuting from Home</p>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>

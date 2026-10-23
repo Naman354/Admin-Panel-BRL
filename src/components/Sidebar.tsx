@@ -35,13 +35,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'dashboard',
       label: 'Dashboard',
       icon: LayoutDashboard,
-      badge: 'Metrics',
+      badge: 'Stats',
       badgeColor: '#e0e7ff',
       badgeTextColor: '#3730a3',
     },
     {
       id: 'participants',
-      label: 'Participants',
+      label: 'Attendee List',
       icon: Users,
       badge: attendanceStats ? `${attendanceStats.total}` : undefined,
       badgeColor: '#e0f2fe',
@@ -49,9 +49,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'attendance',
-      label: 'Attendance Scanner',
+      label: 'Check-in Desk',
       icon: ScanLine,
-      badge: 'Live',
+      badge: 'Scan',
       badgeColor: '#d1fae5',
       badgeTextColor: '#065f46',
       isHighlight: true,
@@ -135,7 +135,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   BRL Admin Panel
                 </h1>
                 <p style={{ fontSize: '11px', color: '#64748b', fontWeight: '600' }}>
-                  Registration & Attendance
+                  Event & Check-in Desk
                 </p>
               </div>
             )}
@@ -144,7 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isMobile && (
             <button
               onClick={onToggle}
-              title={isOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
+              title={isOpen ? 'Collapse navigation menu' : 'Expand navigation menu'}
               style={{
                 background: '#f8fafc',
                 border: '1px solid #e2e8f0',
@@ -196,7 +196,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   borderRadius: '10px',
                   color: isActive ? '#4338ca' : '#475569',
                   fontSize: '14px',
-                  fontWeight: isActive ? '700' : '500',
+                  fontWeight: isActive ? '700' : '600',
                   cursor: 'pointer',
                   position: 'relative',
                   transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -262,20 +262,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
               <CheckCircle2 size={16} color="#059669" />
-              <span style={{ fontSize: '12px', fontWeight: '700', color: '#065f46' }}>Live Check-ins</span>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: '#065f46' }}>Turnout So Far</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-              <span style={{ fontSize: '20px', fontWeight: '800', color: '#065f46' }}>
+              <span style={{ fontSize: '18px', fontWeight: '800', color: '#065f46' }}>
                 {attendanceStats.present}{' '}
                 <span style={{ fontSize: '13px', fontWeight: '500', color: '#047857' }}>
-                  / {attendanceStats.total}
+                  checked in
                 </span>
               </span>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: '#059669' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: '#059669' }}>
                 {attendanceStats.total > 0
                   ? Math.round((attendanceStats.present / attendanceStats.total) * 100)
                   : 0}
-                %
+                % of {attendanceStats.total}
               </span>
             </div>
           </div>
@@ -328,13 +328,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     {user?.username || 'Admin'}
                   </p>
-                  <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>Administrator</p>
+                  <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>Desk Manager</p>
                 </div>
               </div>
 
               <button
                 onClick={logout}
-                title="Logout"
+                title="Log out of the panel"
                 style={{
                   background: '#fef2f2',
                   border: '1px solid #fecdd3',
@@ -356,7 +356,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <button
               onClick={logout}
-              title="Logout"
+              title="Log out"
               style={{
                 background: 'transparent',
                 border: 'none',

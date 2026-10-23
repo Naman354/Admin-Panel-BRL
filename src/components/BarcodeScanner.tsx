@@ -169,7 +169,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan }) => {
           </div>
           <div>
             <h4 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Camera Barcode Scanner</h4>
-            <p style={{ fontSize: '12px', color: '#64748b', margin: '1px 0 0' }}>Supports 1D Barcodes & QR Codes on confirmation emails</p>
+            <p style={{ fontSize: '12px', color: '#64748b', margin: '1px 0 0' }}>Scan barcode or QR code from the student's confirmation email</p>
           </div>
         </div>
 
@@ -245,14 +245,14 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan }) => {
               <Camera size={28} />
             </div>
             <p style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '4px' }}>
-              Camera Scanner is Ready
+              Camera Scanner Ready
             </p>
-            <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '300px', marginBottom: '18px' }}>
-              Click Start to activate webcam or plug in a USB handheld barcode reader
+            <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '320px', marginBottom: '18px' }}>
+              Turn on your webcam to scan codes, or use a handheld USB barcode scanner anytime
             </p>
             <button onClick={startScanner} className="btn btn-primary">
               <Camera size={16} />
-              <span>Start Camera Scanner</span>
+              <span>Turn On Camera</span>
             </button>
           </div>
         )}
@@ -276,7 +276,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan }) => {
               {cameraError}
             </p>
             <button onClick={startScanner} className="btn btn-secondary" style={{ fontSize: '12px' }}>
-              <RefreshCw size={14} /> Retry Camera
+              <RefreshCw size={14} /> Try Camera Again
             </button>
           </div>
         )}
@@ -303,7 +303,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan }) => {
             }}
           />
           <span style={{ fontSize: '12px', color: '#475569' }}>
-            Hardware USB scanner detection <strong style={{ color: '#047857' }}>Active</strong>
+            Handheld USB barcode guns <strong style={{ color: '#047857' }}>work automatically</strong> anytime
           </span>
         </div>
 
@@ -314,7 +314,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan }) => {
             style={{ fontSize: '12px', padding: '6px 12px' }}
           >
             <CameraOff size={14} />
-            <span>Stop Camera</span>
+            <span>Turn Off Camera</span>
           </button>
         )}
       </div>

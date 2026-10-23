@@ -129,7 +129,7 @@ export const ParticipantsPage: React.FC = () => {
   const handleExport = () => {
     exportParticipantsToExcel(
       filteredParticipants,
-      `BRL_Participants_${selectedAttendance !== 'All' ? selectedAttendance : 'All'}`
+      `BRL_Attendees_${selectedAttendance !== 'All' ? selectedAttendance : 'All'}`
     );
   };
 
@@ -174,26 +174,28 @@ export const ParticipantsPage: React.FC = () => {
       >
         <div>
           <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-            Participants Directory
+            Registered Attendees
           </h3>
           <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0' }}>
-            Showing <strong>{filteredParticipants.length}</strong> of {participants.length} registered attendees ({totalPresentCount} Present, {totalAbsentCount} Absent)
+            Showing <strong>{filteredParticipants.length}</strong> of {participants.length} students &nbsp;·&nbsp;{' '}
+            <span style={{ color: '#059669', fontWeight: '700' }}>{totalPresentCount} Checked In</span>,{' '}
+            <span style={{ color: '#d97706', fontWeight: '600' }}>{totalAbsentCount} Awaiting Arrival</span>
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button onClick={fetchParticipants} className="btn btn-secondary" title="Refresh records">
+          <button onClick={fetchParticipants} className="btn btn-secondary" title="Refresh student records">
             <RefreshCw size={15} style={{ animation: isLoading ? 'spin 1s linear infinite' : 'none' }} />
           </button>
 
           <button onClick={() => setIsAddModalOpen(true)} className="btn btn-secondary">
             <UserPlus size={16} />
-            <span>Add Walk-in</span>
+            <span>Register Walk-in</span>
           </button>
 
           <button onClick={handleExport} className="btn btn-primary">
             <FileSpreadsheet size={16} />
-            <span>Export to Excel ({filteredParticipants.length})</span>
+            <span>Download Excel ({filteredParticipants.length})</span>
           </button>
         </div>
       </div>
@@ -215,7 +217,7 @@ export const ParticipantsPage: React.FC = () => {
             <input
               type="text"
               className="input-control"
-              placeholder="Search by student name, roll number, student ID, email, or phone..."
+              placeholder="Search by student name, roll number, student ID, or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ paddingLeft: '40px' }}
@@ -238,7 +240,7 @@ export const ParticipantsPage: React.FC = () => {
                   color: '#64748b',
                   cursor: 'pointer',
                   fontSize: '12px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                 }}
               >
                 Clear
@@ -273,7 +275,7 @@ export const ParticipantsPage: React.FC = () => {
         >
           {/* Branch Filter */}
           <div className="input-group">
-            <label className="input-label">Branch / Department</label>
+            <label className="input-label">Branch</label>
             <select
               className="input-control"
               value={selectedBranch}
@@ -299,10 +301,10 @@ export const ParticipantsPage: React.FC = () => {
               onChange={(e) => setSelectedYear(e.target.value)}
             >
               <option value="All">All Years</option>
-              <option value="1">Year 1</option>
-              <option value="2">Year 2</option>
-              <option value="3">Year 3</option>
-              <option value="4">Year 4</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
             </select>
           </div>
 
@@ -321,31 +323,31 @@ export const ParticipantsPage: React.FC = () => {
             </select>
           </div>
 
-          {/* Residency */}
+          {/* Living Status */}
           <div className="input-group">
-            <label className="input-label">Residency</label>
+            <label className="input-label">Living Status</label>
             <select
               className="input-control"
               value={selectedResidency}
               onChange={(e) => setSelectedResidency(e.target.value)}
             >
-              <option value="All">All Residencies</option>
-              <option value="Hosteler">Hosteler</option>
-              <option value="Day Scholar">Day Scholar</option>
+              <option value="All">Hostel & Day Scholars</option>
+              <option value="Hosteler">Hostel Residents</option>
+              <option value="Day Scholar">Day Scholars (Commuters)</option>
             </select>
           </div>
 
           {/* Attendance Status */}
           <div className="input-group">
-            <label className="input-label">Attendance Status</label>
+            <label className="input-label">Check-in Status</label>
             <select
               className="input-control"
               value={selectedAttendance}
               onChange={(e) => setSelectedAttendance(e.target.value)}
             >
               <option value="All">All Statuses</option>
-              <option value="Present">Present (Checked In)</option>
-              <option value="Absent">Absent (Pending)</option>
+              <option value="Present">Checked In</option>
+              <option value="Absent">Not Yet Arrived</option>
             </select>
           </div>
         </div>
@@ -357,12 +359,12 @@ export const ParticipantsPage: React.FC = () => {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Student / Roll No</th>
-                <th>Participant</th>
+                <th>Student ID & Roll No</th>
+                <th>Student</th>
                 <th>Branch & Year</th>
-                <th>Demographics</th>
-                <th>Attendance Status</th>
-                <th>Check-in Details</th>
+                <th>Living Status</th>
+                <th>Check-in Status</th>
+                <th>Arrival Time</th>
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
@@ -381,16 +383,16 @@ export const ParticipantsPage: React.FC = () => {
                         margin: '0 auto 12px',
                       }}
                     />
-                    <p style={{ color: '#64748b', fontSize: '13px' }}>Loading participant records from MongoDB...</p>
+                    <p style={{ color: '#64748b', fontSize: '13px' }}>Loading attendee list...</p>
                   </td>
                 </tr>
               ) : paginatedParticipants.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '48px', color: '#64748b' }}>
                     <p style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', marginBottom: '4px' }}>
-                      No matching participants found
+                      No students match your search
                     </p>
-                    <p style={{ fontSize: '13px' }}>Try adjusting your search criteria or filters</p>
+                    <p style={{ fontSize: '13px' }}>Try searching by another keyword or clear the filters</p>
                     <button
                       onClick={handleResetFilters}
                       className="btn btn-secondary"
@@ -406,7 +408,7 @@ export const ParticipantsPage: React.FC = () => {
 
                   return (
                     <tr key={p.studentNumber || p._id}>
-                      {/* Roll Number & Barcode Tag */}
+                      {/* Student Number & Roll Number */}
                       <td>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                           <span
@@ -426,7 +428,7 @@ export const ParticipantsPage: React.FC = () => {
                             {p.studentNumber}
                           </span>
                           {p.rollNo && p.rollNo !== p.studentNumber && (
-                            <span style={{ fontSize: '11px', color: '#94a3b8', fontFamily: 'var(--font-mono)' }}>
+                            <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
                               Roll: {p.rollNo}
                             </span>
                           )}
@@ -474,7 +476,7 @@ export const ParticipantsPage: React.FC = () => {
                         </span>
                       </td>
 
-                      {/* Demographics (Gender & Residency) */}
+                      {/* Living Status */}
                       <td>
                         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                           <span
@@ -502,11 +504,11 @@ export const ParticipantsPage: React.FC = () => {
                       <td>
                         <span className={`badge ${isPresent ? 'badge-present' : 'badge-absent'}`}>
                           {isPresent ? <CheckCircle2 size={13} /> : <Clock size={13} />}
-                          <span>{isPresent ? 'Present' : 'Absent'}</span>
+                          <span>{isPresent ? 'Checked In' : 'Not Checked In'}</span>
                         </span>
                       </td>
 
-                      {/* Check-in Details */}
+                      {/* Arrival Details */}
                       <td>
                         {isPresent && p.attendance.markedAt ? (
                           <div>
@@ -517,11 +519,11 @@ export const ParticipantsPage: React.FC = () => {
                               })}
                             </p>
                             <p style={{ fontSize: '11px', color: '#64748b', margin: '1px 0 0' }}>
-                              via {p.attendance.markedMethod}
+                              {p.attendance.markedMethod === 'BARCODE' ? 'via Barcode' : 'via Manual'}
                             </p>
                           </div>
                         ) : (
-                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>Pending</span>
+                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>Awaiting</span>
                         )}
                       </td>
 
@@ -530,7 +532,7 @@ export const ParticipantsPage: React.FC = () => {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                           <button
                             onClick={() => setSelectedParticipant(p)}
-                            title="View Full Profile & Barcode"
+                            title="View student ticket and details"
                             className="btn btn-secondary btn-icon"
                             style={{ padding: '7px' }}
                           >
@@ -568,17 +570,17 @@ export const ParticipantsPage: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Rows per page:</span>
+            <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Show:</span>
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
               className="input-control"
               style={{ width: 'auto', padding: '4px 24px 4px 10px', fontSize: '12px' }}
             >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
+              <option value={10}>10 students</option>
+              <option value={25}>25 students</option>
+              <option value={50}>50 students</option>
+              <option value={100}>100 students</option>
             </select>
           </div>
 
@@ -593,6 +595,7 @@ export const ParticipantsPage: React.FC = () => {
                 disabled={currentPage === 1}
                 className="btn btn-secondary btn-icon"
                 style={{ padding: '6px', opacity: currentPage === 1 ? 0.4 : 1 }}
+                title="Previous page"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -602,6 +605,7 @@ export const ParticipantsPage: React.FC = () => {
                 disabled={currentPage >= totalPages}
                 className="btn btn-secondary btn-icon"
                 style={{ padding: '6px', opacity: currentPage >= totalPages ? 0.4 : 1 }}
+                title="Next page"
               >
                 <ChevronRight size={16} />
               </button>

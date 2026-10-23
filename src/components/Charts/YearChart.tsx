@@ -30,7 +30,7 @@ export const YearChart: React.FC<YearChartProps> = ({ data }) => {
         >
           <p style={{ fontSize: '13px', fontWeight: '800', color: '#0f172a', margin: 0 }}>{item.name}</p>
           <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-            Registrations: <strong style={{ color: '#0f172a' }}>{item.count}</strong> ({item.percentage}%)
+            Registered: <strong style={{ color: '#0f172a' }}>{item.count} students</strong> ({item.percentage}%)
           </p>
         </div>
       );
@@ -42,8 +42,8 @@ export const YearChart: React.FC<YearChartProps> = ({ data }) => {
     <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
         <div>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Year-wise Distribution</h4>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Students by current academic year</p>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Students by College Year</h4>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Breakdown of registrations across 1st to 4th year</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export const YearChart: React.FC<YearChartProps> = ({ data }) => {
 
       {/* Year breakdown cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginTop: 'auto', paddingTop: '12px' }}>
-        {data.map((item, idx) => (
+        {data.map((item) => (
           <div
             key={item.name}
             style={{
@@ -87,7 +87,7 @@ export const YearChart: React.FC<YearChartProps> = ({ data }) => {
               textAlign: 'center',
             }}
           >
-            <p style={{ fontSize: '11px', color: '#64748b', margin: 0, fontWeight: '600' }}>Y{item.year}</p>
+            <p style={{ fontSize: '11px', color: '#64748b', margin: 0, fontWeight: '600' }}>{item.name}</p>
             <p style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: '2px 0 0' }}>
               {item.count}
             </p>

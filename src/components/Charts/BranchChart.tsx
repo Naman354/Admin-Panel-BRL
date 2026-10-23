@@ -35,7 +35,7 @@ export const BranchChart: React.FC<BranchChartProps> = ({ data }) => {
     return {
       fullName: b.name,
       shortName,
-      Total: b.total,
+      Registered: b.total,
       'Checked In': b.present,
       percentage: b.percentage,
     };
@@ -62,14 +62,14 @@ export const BranchChart: React.FC<BranchChartProps> = ({ data }) => {
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4f46e5' }} />
               <span style={{ fontSize: '12px', color: '#64748b' }}>
                 Total Registered:{' '}
-                <strong style={{ color: '#0f172a' }}>{item.Total}</strong> ({item.percentage}%)
+                <strong style={{ color: '#0f172a' }}>{item.Registered}</strong> ({item.percentage}% of all sign-ups)
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#059669' }} />
               <span style={{ fontSize: '12px', color: '#64748b' }}>
-                Attended:{' '}
-                <strong style={{ color: '#059669' }}>{item['Checked In']}</strong>
+                Present at Event:{' '}
+                <strong style={{ color: '#059669' }}>{item['Checked In']} students</strong>
               </span>
             </div>
           </div>
@@ -83,8 +83,8 @@ export const BranchChart: React.FC<BranchChartProps> = ({ data }) => {
     <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
         <div>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Branch-wise Distribution</h4>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Registrations & Check-ins grouped by academic department</p>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Registrations & Turnout by Branch</h4>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Compare how many signed up vs how many have arrived from each department</p>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ export const BranchChart: React.FC<BranchChartProps> = ({ data }) => {
               iconType="circle"
               formatter={(value) => <span style={{ color: '#475569', fontSize: '12px', fontWeight: '600' }}>{value}</span>}
             />
-            <Bar dataKey="Total" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="Registered" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={32} />
             <Bar dataKey="Checked In" fill="#059669" radius={[4, 4, 0, 0]} maxBarSize={32} />
           </BarChart>
         </ResponsiveContainer>

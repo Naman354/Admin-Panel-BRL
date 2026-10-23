@@ -50,7 +50,7 @@ export const AddParticipantModal: React.FC<AddParticipantModalProps> = ({
         onClose();
       }
     } catch (err: any) {
-      setError(err?.message || 'Failed to add participant to MongoDB');
+      setError(err?.message || 'Could not save attendee details. Please check the information and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -125,10 +125,10 @@ export const AddParticipantModal: React.FC<AddParticipantModalProps> = ({
           </div>
           <div>
             <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-              Add Walk-in Participant
+              Register Walk-in Student
             </h3>
             <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-              Direct desk registration into live MongoDB collection
+              Add an attendee who arrived at the event without registering online in advance
             </p>
           </div>
         </div>
@@ -156,7 +156,7 @@ export const AddParticipantModal: React.FC<AddParticipantModalProps> = ({
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div className="input-group">
-              <label className="input-label">Student / Roll No *</label>
+              <label className="input-label">Student No / Roll No *</label>
               <input
                 type="text"
                 className="input-control"
@@ -253,14 +253,14 @@ export const AddParticipantModal: React.FC<AddParticipantModalProps> = ({
             </div>
 
             <div className="input-group">
-              <label className="input-label">Residency *</label>
+              <label className="input-label">Living Status *</label>
               <select
                 className="input-control"
                 value={formData.residency}
                 onChange={(e) => setFormData({ ...formData, residency: e.target.value })}
               >
-                <option value="Hosteler">Hosteler</option>
-                <option value="Day Scholar">Day Scholar</option>
+                <option value="Hosteler">Hosteler (Living on Campus)</option>
+                <option value="Day Scholar">Day Scholar (Commuting from Home)</option>
               </select>
             </div>
           </div>
@@ -273,7 +273,7 @@ export const AddParticipantModal: React.FC<AddParticipantModalProps> = ({
               style={{ flex: 1, padding: '12px' }}
             >
               <UserPlus size={18} />
-              <span>{isSubmitting ? 'Registering...' : 'Register to MongoDB'}</span>
+              <span>{isSubmitting ? 'Registering...' : 'Save & Check In Student'}</span>
             </button>
             <button
               type="button"

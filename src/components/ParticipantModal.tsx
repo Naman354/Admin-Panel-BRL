@@ -117,7 +117,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
                 className={`badge ${isPresent ? 'badge-present' : 'badge-absent'}`}
                 style={{ fontSize: '11px', padding: '3px 8px' }}
               >
-                {isPresent ? 'Checked In' : 'Absent'}
+                {isPresent ? 'Checked In' : 'Not Checked In'}
               </span>
             </div>
             <p
@@ -147,7 +147,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
           }}
         >
           <p style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Event Confirmation Barcode (Student ID)
+            Confirmation Barcode / Student ID
           </p>
           <div
             style={{
@@ -183,7 +183,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }}>
           <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '10px' }}>
             <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
-              <Mail size={13} /> Email
+              <Mail size={13} /> Email Address
             </span>
             <p style={{ fontSize: '13px', color: '#0f172a', fontWeight: '600', marginTop: '3px', wordBreak: 'break-all' }}>
               {participant.email}
@@ -192,16 +192,16 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
 
           <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '10px' }}>
             <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
-              <Phone size={13} /> Phone
+              <Phone size={13} /> Phone Number
             </span>
             <p style={{ fontSize: '13px', color: '#0f172a', fontWeight: '600', marginTop: '3px' }}>
-              {participant.phoneNumber || 'N/A'}
+              {participant.phoneNumber || 'Not provided'}
             </p>
           </div>
 
           <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '10px' }}>
             <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
-              <GraduationCap size={13} /> Branch & Year
+              <GraduationCap size={13} /> Academic Branch & Year
             </span>
             <p style={{ fontSize: '13px', color: '#0f172a', fontWeight: '600', marginTop: '3px' }}>
               {participant.branch} (Year {participant.year})
@@ -210,10 +210,10 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
 
           <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '10px' }}>
             <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
-              <Home size={13} /> Residency
+              <Home size={13} /> Living Status
             </span>
             <p style={{ fontSize: '13px', color: '#0f172a', fontWeight: '600', marginTop: '3px' }}>
-              {participant.residency}
+              {participant.residency === 'Hosteler' ? 'Hostel Resident' : 'Day Scholar (Commuter)'}
             </p>
           </div>
 
@@ -254,10 +254,10 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
               <CheckCircle2 size={18} color="#059669" />
               <div>
                 <p style={{ fontSize: '12px', fontWeight: '700', color: '#065f46', margin: 0 }}>
-                  Attendance Verified
+                  Checked In Successfully
                 </p>
                 <p style={{ fontSize: '11px', color: '#047857', margin: 0 }}>
-                  Method: {participant.attendance.markedMethod}
+                  Verified via {participant.attendance.markedMethod === 'BARCODE' ? 'Barcode Scan' : 'Manual Entry'}
                 </p>
               </div>
             </div>
@@ -284,7 +284,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
             style={{ flex: 1, padding: '12px' }}
           >
             <CheckCircle2 size={18} />
-            <span>{isPresent ? 'Undo Check-in (Mark Absent)' : 'Mark Present (Check In)'}</span>
+            <span>{isPresent ? 'Undo Check-in' : 'Mark as Checked In'}</span>
           </button>
 
           <button onClick={onClose} className="btn btn-secondary" style={{ padding: '12px 20px' }}>

@@ -44,7 +44,7 @@ export const RegistrationTimelineChart: React.FC<RegistrationTimelineChartProps>
         >
           <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>{item.rawDate}</p>
           <p style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: '4px 0 0' }}>
-            {item.Registrations} Registrations
+            {item.Registrations} students registered
           </p>
         </div>
       );
@@ -56,8 +56,8 @@ export const RegistrationTimelineChart: React.FC<RegistrationTimelineChartProps>
     <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
         <div>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Registration Velocity</h4>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Daily registration trajectory over time</p>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Sign-ups Over Time</h4>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Daily registrations leading up to the seminar</p>
         </div>
       </div>
 

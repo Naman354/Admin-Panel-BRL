@@ -20,22 +20,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const pageTitles: Record<string, { title: string; subtitle: string }> = {
     dashboard: {
-      title: 'Registration Analytics',
-      subtitle: 'Real-time participant metrics & demographic distribution',
+      title: 'Event Dashboard',
+      subtitle: 'Overview of signups, student demographics, and live arrivals',
     },
     participants: {
-      title: 'Participants Directory',
-      subtitle: 'Complete list of registered attendees with full records',
+      title: 'Registered Students',
+      subtitle: 'Browse, filter, and manage all registered participants',
     },
     attendance: {
-      title: 'Day-of-Event Attendance',
-      subtitle: 'Fast barcode scanner & manual roll number check-in',
+      title: 'Check-in Desk',
+      subtitle: 'Scan barcodes from confirmation emails or check in by roll number',
     },
   };
 
   const current = pageTitles[currentPage] || {
     title: 'BRL Admin Panel',
-    subtitle: 'Registration & Attendance Console',
+    subtitle: 'Event management & student check-in',
   };
 
   return (
@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <button
           onClick={onToggleSidebar}
-          aria-label="Toggle navigation"
+          aria-label="Toggle navigation menu"
           style={{
             background: '#ffffff',
             border: '1px solid #e2e8f0',
@@ -93,12 +93,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '5px',
+                gap: '6px',
                 fontSize: '11px',
                 fontWeight: '700',
-                padding: '2px 8px',
+                padding: '3px 9px',
                 borderRadius: '999px',
-                background: '#d1fae5',
+                background: '#ecfdf5',
                 color: '#065f46',
                 border: '1px solid #a7f3d0',
               }}
@@ -111,9 +111,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   background: '#059669',
                 }}
               />
-              BRL Portal
+              Check-in Open
             </span>
           </div>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0', display: 'none' }}>
+            {current.subtitle}
+          </p>
         </div>
       </div>
 
@@ -122,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {onRefresh && (
           <button
             onClick={onRefresh}
-            title="Refresh Data"
+            title="Refresh latest data"
             disabled={isRefreshing}
             className="btn btn-secondary"
             style={{ fontSize: '13px', padding: '8px 12px' }}
@@ -142,9 +145,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onExportExcel}
             className="btn btn-secondary"
             style={{ fontSize: '13px', padding: '8px 14px' }}
+            title="Download full participant list as an Excel spreadsheet"
           >
             <FileSpreadsheet size={16} color="#059669" />
-            <span>Export Excel</span>
+            <span>Download Excel</span>
           </button>
         )}
 
@@ -155,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             style={{ fontSize: '13px', padding: '8px 16px' }}
           >
             <ScanLine size={16} />
-            <span>Open Scanner</span>
+            <span>Check In Students</span>
           </button>
         )}
       </div>

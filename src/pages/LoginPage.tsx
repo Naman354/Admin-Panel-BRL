@@ -13,7 +13,7 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) {
-      setError('Please enter the admin password');
+      setError('Please enter your password to continue.');
       return;
     }
 
@@ -22,10 +22,10 @@ export const LoginPage: React.FC = () => {
       setError(null);
       const res = await login(password, username);
       if (!res.success) {
-        setError(res.message || 'Invalid admin password. Check ADMIN_PASSWORD in .env');
+        setError(res.message || 'Incorrect password. Please try again.');
       }
     } catch (err: any) {
-      setError(err?.message || 'Failed to authenticate');
+      setError(err?.message || 'Could not sign in. Please verify your connection.');
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +82,8 @@ export const LoginPage: React.FC = () => {
         className="glass-card"
         style={{
           width: '100%',
-          maxWidth: '440px',
-          padding: '40px 36px',
+          maxWidth: '430px',
+          padding: '38px 34px',
           borderRadius: '24px',
           border: '1px solid #e2e8f0',
           background: '#ffffff',
@@ -93,21 +93,21 @@ export const LoginPage: React.FC = () => {
         }}
       >
         {/* Brand Icon & Heading */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
           <div
             style={{
-              width: '56px',
-              height: '56px',
+              width: '54px',
+              height: '54px',
               borderRadius: '16px',
               background: 'linear-gradient(135deg, #4f46e5 0%, #0284c7 100%)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 8px 20px rgba(79, 70, 229, 0.25)',
-              marginBottom: '16px',
+              marginBottom: '14px',
             }}
           >
-            <ShieldCheck size={30} color="#ffffff" />
+            <ShieldCheck size={28} color="#ffffff" />
           </div>
           <h2
             style={{
@@ -118,41 +118,41 @@ export const LoginPage: React.FC = () => {
               marginBottom: '6px',
             }}
           >
-            BRL Admin Panel
+            Welcome Back
           </h2>
-          <p style={{ fontSize: '13px', color: '#64748b' }}>
-            Event Registration & Attendance Management
+          <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
+            Sign in to access the BRL attendee desk & live check-in scanner.
           </p>
         </div>
 
         {error && (
           <div
             style={{
-              padding: '12px 16px',
+              padding: '12px 14px',
               borderRadius: '12px',
               background: '#fef2f2',
               border: '1px solid #fecdd3',
-              color: '#e11d48',
+              color: '#b91c1c',
               fontSize: '13px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              marginBottom: '20px',
+              marginBottom: '18px',
             }}
           >
-            <AlertCircle size={18} style={{ flexShrink: 0 }} />
+            <AlertCircle size={17} style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="input-group">
-            <label className="input-label">Admin Username</label>
+            <label className="input-label">Username</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
                 className="input-control"
-                placeholder="admin"
+                placeholder="e.g. admin"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 style={{ paddingLeft: '40px' }}
@@ -167,17 +167,12 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label className="input-label">Admin Password</label>
-              <span style={{ fontSize: '11px', color: '#4f46e5', fontWeight: '600' }}>
-                Defined in .env
-              </span>
-            </div>
+            <label className="input-label">Password</label>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
                 className="input-control"
-                placeholder="Enter password from .env"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={{ paddingLeft: '40px', paddingRight: '40px' }}
@@ -192,6 +187,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? 'Hide password' : 'Show password'}
                 style={{
                   position: 'absolute',
                   right: '12px',
@@ -213,38 +209,38 @@ export const LoginPage: React.FC = () => {
             type="submit"
             disabled={isLoading}
             className="btn btn-primary"
-            style={{ width: '100%', padding: '13px', marginTop: '8px', fontSize: '15px' }}
+            style={{ width: '100%', padding: '12px', marginTop: '6px', fontSize: '14px' }}
           >
             {isLoading ? (
-              <span>Authenticating...</span>
+              <span>Signing in...</span>
             ) : (
               <>
-                <span>Access BRL Admin</span>
-                <ArrowRight size={18} />
+                <span>Sign In</span>
+                <ArrowRight size={17} />
               </>
             )}
           </button>
         </form>
 
-        {/* Quick Demo Hint */}
+        {/* Demo Helper Box */}
         <div
           style={{
-            marginTop: '24px',
-            padding: '14px',
+            marginTop: '22px',
+            padding: '12px 14px',
             borderRadius: '12px',
             background: '#f8fafc',
             border: '1px solid #e2e8f0',
             textAlign: 'center',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '6px' }}>
-            <Sparkles size={14} color="#4f46e5" />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '4px' }}>
+            <Sparkles size={13} color="#4f46e5" />
             <span style={{ fontSize: '12px', fontWeight: '700', color: '#334155' }}>
-              Credentials (from .env)
+              Default Sign-in Info
             </span>
           </div>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 10px' }}>
-            User: <strong style={{ color: '#0f172a' }}>admin</strong> | Pass:{' '}
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 8px' }}>
+            Username: <strong style={{ color: '#0f172a' }}>admin</strong> &nbsp;·&nbsp; Password:{' '}
             <strong style={{ color: '#4f46e5' }}>admin@portal2026</strong>
           </p>
           <button
@@ -253,15 +249,15 @@ export const LoginPage: React.FC = () => {
             style={{
               background: '#e0e7ff',
               border: '1px solid #c7d2fe',
-              borderRadius: '8px',
-              padding: '6px 14px',
+              borderRadius: '6px',
+              padding: '5px 12px',
               color: '#3730a3',
               fontSize: '11px',
               fontWeight: '700',
               cursor: 'pointer',
             }}
           >
-            Auto-fill Credentials
+            Fill Credentials
           </button>
         </div>
       </div>

@@ -45,7 +45,7 @@ export const GenderChart: React.FC<GenderChartProps> = ({ data }) => {
             <span style={{ fontSize: '13px', fontWeight: '700', color: '#0f172a' }}>{item.name}</span>
           </div>
           <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', margin: '4px 0 0' }}>
-            Count: <strong style={{ color: '#0f172a' }}>{item.count}</strong> ({item.percentage}%)
+            Count: <strong style={{ color: '#0f172a' }}>{item.count} students</strong> ({item.percentage}%)
           </p>
         </div>
       );
@@ -57,8 +57,8 @@ export const GenderChart: React.FC<GenderChartProps> = ({ data }) => {
     <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
         <div>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Gender Distribution</h4>
-          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Breakdown of registered attendees by gender</p>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Attendees by Gender</h4>
+          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Distribution of registered students</p>
         </div>
         <span
           style={{
@@ -70,7 +70,7 @@ export const GenderChart: React.FC<GenderChartProps> = ({ data }) => {
             borderRadius: '6px',
           }}
         >
-          Total: {total}
+          {total} Total
         </span>
       </div>
 
@@ -109,7 +109,7 @@ export const GenderChart: React.FC<GenderChartProps> = ({ data }) => {
           }}
         >
           <span style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', lineHeight: 1 }}>{total}</span>
-          <p style={{ fontSize: '11px', color: '#64748b', margin: 0, fontWeight: '600' }}>Registered</p>
+          <p style={{ fontSize: '11px', color: '#64748b', margin: 0, fontWeight: '600' }}>Students</p>
         </div>
       </div>
 

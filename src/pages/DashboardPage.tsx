@@ -34,7 +34,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
       const data = await api.getMetrics();
       setMetrics(data);
     } catch (err: any) {
-      setError(err?.message || 'Failed to load registration metrics');
+      setError(err?.message || 'Could not load registration data.');
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const handleExportAll = async () => {
     try {
       const participants = await api.getParticipants();
-      exportParticipantsToExcel(participants, 'BRL_Registered_Participants');
+      exportParticipantsToExcel(participants, 'BRL_Event_Attendees');
     } catch (err) {
       console.error('Export failed:', err);
     }
@@ -70,7 +70,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               margin: '0 auto 16px',
             }}
           />
-          <p style={{ color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Loading analytics...</p>
+          <p style={{ color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Loading latest numbers...</p>
         </div>
       </div>
     );
@@ -80,10 +80,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     return (
       <div className="glass-card" style={{ padding: '32px', textAlign: 'center', margin: '40px auto', maxWidth: '500px', background: '#ffffff' }}>
         <AlertCircle size={40} color="#e11d48" style={{ marginBottom: '12px' }} />
-        <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '800', marginBottom: '8px' }}>Failed to Load Dashboard</h3>
+        <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '800', marginBottom: '8px' }}>Something went wrong</h3>
         <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '20px' }}>{error}</p>
         <button onClick={fetchMetrics} className="btn btn-primary">
-          Retry Loading
+          Try Again
         </button>
       </div>
     );
@@ -93,7 +93,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Welcome Banner */}
+      {/* Friendly Welcome & Summary Banner */}
       <div
         className="glass-card"
         style={{
@@ -118,21 +118,21 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               }}
             />
             <span style={{ fontSize: '12px', fontWeight: '800', color: '#047857', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              BRL Live Registration Station
+              Event Day Active
             </span>
           </div>
           <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.01em', margin: 0 }}>
-            Registration & Attendance Metrics
+            Welcome to the Event Desk 👋
           </h2>
           <p style={{ fontSize: '13px', color: '#475569', margin: '4px 0 0' }}>
-            Live monitoring of participant registrations, branches, and on-site attendance from MongoDB.
+            Track registrations, understand student demographics, and verify attendees as they arrive.
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button onClick={handleExportAll} className="btn btn-secondary" style={{ fontSize: '13px' }}>
             <FileSpreadsheet size={16} color="#059669" />
-            <span>Export to Excel</span>
+            <span>Download Attendee List</span>
           </button>
 
           <button
@@ -141,7 +141,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             style={{ fontSize: '13px' }}
           >
             <ScanLine size={16} />
-            <span>Open Barcode Scanner</span>
+            <span>Open Check-in Desk</span>
             <ArrowRight size={16} />
           </button>
         </div>
@@ -150,43 +150,42 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
       {/* Top Row: 4 Primary KPI Metric Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
         <MetricCard
-          title="Total Registrations"
+          title="Total Registered"
           value={overview.totalRegistrations}
-          subtitle="All confirmed participants in database"
+          subtitle="Students signed up for the event"
           icon={Users}
           color="#4f46e5"
-          badge="Live DB"
+          badge="Live Count"
           badgeType="info"
         />
 
         <MetricCard
-          title="Attendance Marked"
+          title="Checked In"
           value={overview.totalPresent}
-          subtitle={`${overview.attendanceRate}% of registered attendees checked in`}
+          subtitle={`${overview.attendanceRate}% of registered students present`}
           icon={CheckCircle2}
           color="#059669"
-          badge={`${overview.attendanceRate}%`}
+          badge={`${overview.attendanceRate}% Turnout`}
           badgeType="success"
-          trend={`${overview.totalPresent} Present`}
         />
 
         <MetricCard
-          title="Pending / Absent"
+          title="Awaiting Arrival"
           value={overview.totalAbsent}
-          subtitle="Yet to scan badge at the desk"
+          subtitle="Registered students not yet checked in"
           icon={Clock}
           color="#d97706"
-          badge={`${(100 - overview.attendanceRate).toFixed(1)}%`}
+          badge={`${(100 - overview.attendanceRate).toFixed(0)}% Left`}
           badgeType="warning"
         />
 
         <MetricCard
-          title="Check-in Methods"
-          value={`${overview.barcodeScans} / ${overview.manualCheckIns}`}
-          subtitle="Barcode Scans vs Manual Roll ID"
+          title="Verification Methods"
+          value={`${overview.barcodeScans} Barcode · ${overview.manualCheckIns} Manual`}
+          subtitle="How attendees have been verified"
           icon={ScanLine}
           color="#0284c7"
-          badge="Verified"
+          badge="Dual Mode"
           badgeType="info"
         />
       </div>
@@ -211,8 +210,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
             <div>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Live Attendance Feed</h4>
-              <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Latest participants verified at the venue desk</p>
+              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Recent Arrivals</h4>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>Students who recently checked in at the door</p>
             </div>
             <button
               onClick={() => onNavigate('attendance')}
@@ -237,7 +236,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             {metrics.recentCheckIns.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
                 <Clock size={32} style={{ marginBottom: '8px', opacity: 0.5 }} />
-                <p style={{ fontSize: '13px' }}>No check-ins recorded yet today.</p>
+                <p style={{ fontSize: '13px', margin: 0, fontWeight: '600', color: '#64748b' }}>
+                  No check-ins recorded yet today.
+                </p>
+                <p style={{ fontSize: '12px', margin: '4px 0 0' }}>
+                  Head to the Check-in Desk to start scanning barcodes!
+                </p>
               </div>
             ) : (
               metrics.recentCheckIns.map((p) => (
@@ -275,7 +279,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                         {p.fullName}
                       </p>
                       <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
-                        <strong style={{ color: '#0369a1' }}>{p.studentNumber}</strong> • {p.branch}
+                        <strong style={{ color: '#0369a1' }}>{p.studentNumber}</strong> &nbsp;·&nbsp; {p.branch}
                       </p>
                     </div>
                   </div>
@@ -291,7 +295,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                         fontWeight: '700',
                       }}
                     >
-                      {p.attendance.markedMethod || 'VERIFIED'}
+                      {p.attendance.markedMethod === 'BARCODE' ? 'Barcode' : 'Manual'}
                     </span>
                     <p style={{ fontSize: '11px', color: '#64748b', margin: '4px 0 0' }}>
                       {p.attendance.markedAt
