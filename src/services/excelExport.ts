@@ -37,11 +37,9 @@ export function exportParticipantsToExcel(
       'Gender': p.gender,
       'Residency Type': p.residency,
       'Category': p.category || 'Student',
-      'T-Shirt Size': p.tShirtSize || 'M',
       'Attendance Status': p.attendance.marked ? 'PRESENT' : 'ABSENT',
       'Attendance Timestamp': attendanceTimeStr,
       'Check-in Method': p.attendance.markedMethod || 'N/A',
-      'Barcode Identifier': p.barcode,
       'Registration Date': registeredTimeStr,
     };
   });
@@ -52,7 +50,8 @@ export function exportParticipantsToExcel(
   // Set column widths for clean readability
   worksheet['!cols'] = [
     { wch: 6 },  // S.No
-    { wch: 16 }, // Roll No
+    { wch: 16 }, // Student No
+    { wch: 18 }, // University Roll No
     { wch: 22 }, // Full Name
     { wch: 26 }, // Email
     { wch: 16 }, // Phone
@@ -61,11 +60,9 @@ export function exportParticipantsToExcel(
     { wch: 10 }, // Gender
     { wch: 14 }, // Residency
     { wch: 12 }, // Category
-    { wch: 12 }, // T-Shirt Size
     { wch: 16 }, // Attendance Status
     { wch: 24 }, // Timestamp
     { wch: 16 }, // Method
-    { wch: 18 }, // Barcode
     { wch: 20 }, // Registration Date
   ];
 
