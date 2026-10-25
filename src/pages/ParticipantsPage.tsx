@@ -10,7 +10,7 @@ import {
   ChevronRight,
   RotateCcw,
 } from 'lucide-react';
-import { Participant, formatYear } from '../types';
+import { Participant, formatYear, getParticipantYear } from '../types';
 import { api } from '../services/api';
 import { exportParticipantsToExcel } from '../services/excelExport';
 import { ParticipantModal } from '../components/ParticipantModal';
@@ -69,11 +69,12 @@ export const ParticipantsPage: React.FC = () => {
 
       // Year
       if (selectedYear !== 'All') {
+        const participantYear = getParticipantYear(p);
         if (selectedYear === 'null') {
-          if (p.year !== null && p.year !== undefined && String(p.year).trim() !== '' && String(p.year).trim().toLowerCase() !== 'null') {
+          if (participantYear !== null && participantYear !== undefined) {
             return false;
           }
-        } else if (p.year !== Number(selectedYear) && String(p.year) !== selectedYear) {
+        } else if (participantYear !== Number(selectedYear) && String(participantYear) !== selectedYear) {
           return false;
         }
       }
@@ -464,7 +465,7 @@ export const ParticipantsPage: React.FC = () => {
                           {p.branch}
                         </p>
                         <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '600' }}>
-                          {formatYear(p.year)}
+                          {formatYear(getParticipantYear(p))}
                         </span>
                       </td>
 

@@ -11,6 +11,7 @@ import {
   toggleAttendance,
   addParticipant,
   getMetricsData,
+  getYearFromStudent,
 } from './db.js';
 
 // Load environment variables
@@ -164,10 +165,7 @@ router.post('/participants', verifyAdminToken, async (req: Request, res: Respons
       name: personName,
       email,
       branch: branch || 'CSE',
-      year:
-        year !== undefined && year !== null && String(year).trim() !== '' && String(year).trim().toLowerCase() !== 'null'
-          ? (!isNaN(Number(year)) ? Number(year) : year)
-          : null,
+      year: getYearFromStudent(idNumber),
       gender: gender || 'Male',
       residency: residency || 'Day Scholar',
       phoneNumber: phoneNumber || phone || '',

@@ -1,3 +1,18 @@
+export function computeYearFromStudentNumber(studentNumber?: string | number | null): number | null {
+  const str = String(studentNumber || '').trim();
+  if (str.startsWith('24')) return 3;
+  if (str.startsWith('25')) return 2;
+  return null;
+}
+
+export function getParticipantYear(p?: { year?: number | string | null; studentNumber?: string; studentNo?: string; rollNo?: string } | null): number | string | null {
+  if (!p) return null;
+  if (p.year !== undefined && p.year !== null) {
+    return p.year;
+  }
+  return computeYearFromStudentNumber(p.studentNumber || p.studentNo || p.rollNo);
+}
+
 export function formatYear(year: number | string | null | undefined): string {
   if (
     year === null ||

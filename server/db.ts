@@ -5,17 +5,11 @@ let isMongoConnected = false;
 let mongoConnectionError: string | null = null;
 let activeDbName = 'EXPERT-SEMINAR-REGISTRATION';
 
-export function getYearFromStudent(doc: any): number | string | null {
-  if (
-    doc.year !== undefined &&
-    doc.year !== null &&
-    String(doc.year).trim() !== '' &&
-    String(doc.year).trim().toLowerCase() !== 'null' &&
-    String(doc.year).trim().toLowerCase() !== 'undefined'
-  ) {
-    const num = Number(doc.year);
-    return !isNaN(num) ? num : doc.year;
-  }
+export function getYearFromStudent(doc: any): number | null {
+  const raw = typeof doc === 'string' ? doc : (doc?.studentNumber || doc?.studentNo || doc?.rollNo || '');
+  const str = String(raw).trim();
+  if (str.startsWith('24')) return 3;
+  if (str.startsWith('25')) return 2;
   return null;
 }
 
@@ -314,13 +308,7 @@ export async function addParticipant(data: any) {
     phone: data.phoneNumber || data.phone || '',
     phoneNumber: data.phoneNumber || data.phone || '',
     branch: data.branch || 'CSE',
-    year:
-      data.year !== undefined &&
-      data.year !== null &&
-      String(data.year).trim() !== '' &&
-      String(data.year).trim().toLowerCase() !== 'null'
-        ? (!isNaN(Number(data.year)) ? Number(data.year) : data.year)
-        : null,
+    year: getYearFromStudent(data),
     gender: data.gender || 'Male',
     hosteller: isHostel,
     residency: isHostel ? 'Hosteler' : 'Day Scholar',

@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { Participant, formatYear } from '../types';
+import { Participant, formatYear, getParticipantYear } from '../types';
 
 export function exportParticipantsToExcel(
   participants: Participant[],
@@ -33,7 +33,7 @@ export function exportParticipantsToExcel(
       'Email Address': p.email,
       'Phone Number': p.phoneNumber || 'N/A',
       'Branch / Department': p.branch,
-      'Academic Year': formatYear(p.year),
+      'Academic Year': formatYear(getParticipantYear(p)),
       'Gender': p.gender,
       'Residency Type': p.residency,
       'Category': p.category || 'Student',
