@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
   Search,
   FileSpreadsheet,
-  UserPlus,
   RefreshCw,
   CheckCircle2,
   Clock,
@@ -15,7 +14,6 @@ import { Participant } from '../types';
 import { api } from '../services/api';
 import { exportParticipantsToExcel } from '../services/excelExport';
 import { ParticipantModal } from '../components/ParticipantModal';
-import { AddParticipantModal } from '../components/AddParticipantModal';
 
 export const ParticipantsPage: React.FC = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -29,7 +27,6 @@ export const ParticipantsPage: React.FC = () => {
 
   // Modals state
   const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -147,15 +144,6 @@ export const ParticipantsPage: React.FC = () => {
     }
   };
 
-  const handleAddParticipant = async (data: Partial<Participant>) => {
-    try {
-      const created = await api.addParticipant(data);
-      setParticipants((prev) => [created, ...prev]);
-      return true;
-    } catch (err: any) {
-      throw err;
-    }
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -186,11 +174,6 @@ export const ParticipantsPage: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <button onClick={fetchParticipants} className="btn btn-secondary" title="Refresh student records">
             <RefreshCw size={15} style={{ animation: isLoading ? 'spin 1s linear infinite' : 'none' }} />
-          </button>
-
-          <button onClick={() => setIsAddModalOpen(true)} className="btn btn-secondary">
-            <UserPlus size={16} />
-            <span>Register Walk-in</span>
           </button>
 
           <button onClick={handleExport} className="btn btn-primary">
@@ -619,13 +602,6 @@ export const ParticipantsPage: React.FC = () => {
         participant={selectedParticipant}
         onClose={() => setSelectedParticipant(null)}
         onToggleAttendance={handleToggleAttendance}
-      />
-
-      {/* Add Walk-in Modal */}
-      <AddParticipantModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddParticipant}
       />
     </div>
   );

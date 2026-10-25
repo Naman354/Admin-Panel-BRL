@@ -14,7 +14,6 @@ import { Participant, AttendanceResult } from '../types';
 import { api } from '../services/api';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { playSuccessChime, playWarningBuzzer } from '../services/audioEffects';
-import { AddParticipantModal } from '../components/AddParticipantModal';
 
 export const AttendancePage: React.FC = () => {
   const [manualInput, setManualInput] = useState('');
@@ -23,7 +22,6 @@ export const AttendancePage: React.FC = () => {
   const [recentScans, setRecentScans] = useState<Participant[]>([]);
   const [stats, setStats] = useState<{ total: number; present: number }>({ total: 0, present: 0 });
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const manualInputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchCurrentStats = async () => {
@@ -87,16 +85,6 @@ export const AttendancePage: React.FC = () => {
     processAttendance(scannedCode, 'BARCODE');
   };
 
-  const handleAddWalkin = async (data: Partial<Participant>) => {
-    try {
-      const created = await api.addParticipant(data);
-      await processAttendance(created.studentNumber, 'MANUAL');
-      fetchCurrentStats();
-      return true;
-    } catch (err: any) {
-      throw err;
-    }
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -538,18 +526,10 @@ export const AttendancePage: React.FC = () => {
                 </div>
 
                 <p style={{ fontSize: '13px', color: '#b91c1c', marginBottom: '16px', fontWeight: '500' }}>
-                  We couldn't find a registration for this barcode or student number. Check for typos, or register them on the spot as a walk-in attendee.
+                  We couldn't find a registration for this barcode or student number. Please verify the roll number or student ID.
                 </p>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className="btn btn-primary"
-                    style={{ fontSize: '12px', padding: '8px 14px' }}
-                  >
-                    <span>Register Walk-in</span>
-                  </button>
-
                   <button
                     onClick={() => setLastResult(null)}
                     className="btn btn-secondary"
@@ -707,12 +687,6 @@ export const AttendancePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Walk-in Modal */}
-      <AddParticipantModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddWalkin}
-      />
     </div>
   );
 };
