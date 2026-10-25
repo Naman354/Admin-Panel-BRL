@@ -10,7 +10,7 @@ import {
   ChevronRight,
   RotateCcw,
 } from 'lucide-react';
-import { Participant } from '../types';
+import { Participant, formatYear } from '../types';
 import { api } from '../services/api';
 import { exportParticipantsToExcel } from '../services/excelExport';
 import { ParticipantModal } from '../components/ParticipantModal';
@@ -68,7 +68,15 @@ export const ParticipantsPage: React.FC = () => {
       if (selectedBranch !== 'All' && p.branch !== selectedBranch) return false;
 
       // Year
-      if (selectedYear !== 'All' && p.year !== Number(selectedYear)) return false;
+      if (selectedYear !== 'All') {
+        if (selectedYear === 'null') {
+          if (p.year !== null && p.year !== undefined && String(p.year).trim() !== '' && String(p.year).trim().toLowerCase() !== 'null') {
+            return false;
+          }
+        } else if (p.year !== Number(selectedYear) && String(p.year) !== selectedYear) {
+          return false;
+        }
+      }
 
       // Gender
       if (selectedGender !== 'All' && p.gender !== selectedGender) return false;
@@ -288,6 +296,7 @@ export const ParticipantsPage: React.FC = () => {
               <option value="2">2nd Year</option>
               <option value="3">3rd Year</option>
               <option value="4">4th Year</option>
+              <option value="null">Unspecified / Null</option>
             </select>
           </div>
 
@@ -455,7 +464,7 @@ export const ParticipantsPage: React.FC = () => {
                           {p.branch}
                         </p>
                         <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '600' }}>
-                          Year {p.year}
+                          {formatYear(p.year)}
                         </span>
                       </td>
 

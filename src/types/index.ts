@@ -1,3 +1,17 @@
+export function formatYear(year: number | string | null | undefined): string {
+  if (
+    year === null ||
+    year === undefined ||
+    String(year).trim() === '' ||
+    String(year).trim().toLowerCase() === 'null' ||
+    String(year).trim().toLowerCase() === 'undefined'
+  ) {
+    return 'null';
+  }
+  const str = String(year).trim();
+  return str.toLowerCase().includes('year') ? str : `Year ${str}`;
+}
+
 export interface Participant {
   _id?: string;
   studentNumber: string;
@@ -7,7 +21,7 @@ export interface Participant {
   email: string;
   phoneNumber?: string;
   branch: string;
-  year: number;
+  year: number | string | null;
   gender: 'Male' | 'Female' | 'Other';
   residency: 'Hosteler' | 'Day Scholar';
   barcode: string;

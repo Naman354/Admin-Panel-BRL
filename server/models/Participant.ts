@@ -10,7 +10,7 @@ export interface IRegistration extends Document {
   phone?: string;
   phoneNumber?: string;
   branch: string;
-  year?: number | string;
+  year?: number | string | null;
   gender: string;
   hosteller?: boolean;
   residency?: string;

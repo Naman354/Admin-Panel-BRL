@@ -10,7 +10,7 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { Participant, AttendanceResult } from '../types';
+import { Participant, AttendanceResult, formatYear } from '../types';
 import { api } from '../services/api';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { playSuccessChime, playWarningBuzzer } from '../services/audioEffects';
@@ -359,7 +359,7 @@ export const AttendancePage: React.FC = () => {
                     <div>
                       <span style={{ fontSize: '11px', color: '#64748b' }}>Branch & Year</span>
                       <p style={{ fontSize: '14px', fontWeight: '700', color: '#0f172a', margin: '2px 0 0' }}>
-                        {lastResult.participant.branch} (Year {lastResult.participant.year})
+                        {lastResult.participant.branch} ({formatYear(lastResult.participant.year)})
                       </p>
                     </div>
 

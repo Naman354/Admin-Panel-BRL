@@ -5,17 +5,18 @@ let isMongoConnected = false;
 let mongoConnectionError: string | null = null;
 let activeDbName = 'EXPERT-SEMINAR-REGISTRATION';
 
-export function getYearFromStudent(doc: any): number {
-  if (doc.year) {
-    const parsed = parseInt(String(doc.year).replace(/\D/g, ''), 10);
-    if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed;
+export function getYearFromStudent(doc: any): number | string | null {
+  if (
+    doc.year !== undefined &&
+    doc.year !== null &&
+    String(doc.year).trim() !== '' &&
+    String(doc.year).trim().toLowerCase() !== 'null' &&
+    String(doc.year).trim().toLowerCase() !== 'undefined'
+  ) {
+    const num = Number(doc.year);
+    return !isNaN(num) ? num : doc.year;
   }
-  const str = String(doc.studentNo || doc.rollNo || '');
-  if (str.startsWith('25') || str.includes('250027')) return 1;
-  if (str.startsWith('24') || str.includes('240027')) return 2;
-  if (str.startsWith('23') || str.includes('230027')) return 3;
-  if (str.startsWith('22') || str.includes('220027')) return 4;
-  return 1;
+  return null;
 }
 
 export function getResidency(doc: any): 'Hosteler' | 'Day Scholar' {
@@ -170,8 +171,12 @@ export async function getAllParticipants(query?: {
   let results = rawDocs.map(mapRegistrationDoc);
 
   if (query?.year && query.year !== 'All') {
-    const targetYear = Number(query.year);
-    results = results.filter((p) => p.year === targetYear);
+    if (query.year === 'null') {
+      results = results.filter((p) => p.year === null || p.year === undefined);
+    } else {
+      const targetYear = Number(query.year);
+      results = results.filter((p) => p.year === targetYear || String(p.year) === query.year);
+    }
   }
 
   return results;
@@ -309,7 +314,13 @@ export async function addParticipant(data: any) {
     phone: data.phoneNumber || data.phone || '',
     phoneNumber: data.phoneNumber || data.phone || '',
     branch: data.branch || 'CSE',
-    year: data.year || 1,
+    year:
+      data.year !== undefined &&
+      data.year !== null &&
+      String(data.year).trim() !== '' &&
+      String(data.year).trim().toLowerCase() !== 'null'
+        ? (!isNaN(Number(data.year)) ? Number(data.year) : data.year)
+        : null,
     gender: data.gender || 'Male',
     hosteller: isHostel,
     residency: isHostel ? 'Hosteler' : 'Day Scholar',
@@ -379,8 +390,12 @@ export async function getMetricsData() {
   // Year Distribution
   const yearMap: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
   participants.forEach((p) => {
-    const y = p.year || 1;
-    yearMap[y] = (yearMap[y] || 0) + 1;
+    if (p.year !== null && p.year !== undefined) {
+      const y = Number(p.year);
+      if (yearMap[y] !== undefined) {
+        yearMap[y] = (yearMap[y] || 0) + 1;
+      }
+    }
   });
   const yearDistribution = [1, 2, 3, 4].map((year) => ({
     name: `Year ${year}`,

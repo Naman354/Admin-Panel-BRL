@@ -164,7 +164,10 @@ router.post('/participants', verifyAdminToken, async (req: Request, res: Respons
       name: personName,
       email,
       branch: branch || 'CSE',
-      year: Number(year) || 1,
+      year:
+        year !== undefined && year !== null && String(year).trim() !== '' && String(year).trim().toLowerCase() !== 'null'
+          ? (!isNaN(Number(year)) ? Number(year) : year)
+          : null,
       gender: gender || 'Male',
       residency: residency || 'Day Scholar',
       phoneNumber: phoneNumber || phone || '',

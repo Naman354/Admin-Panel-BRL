@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   Shirt,
 } from 'lucide-react';
-import { Participant } from '../types';
+import { Participant, formatYear } from '../types';
 
 interface ParticipantModalProps {
   participant: Participant | null;
@@ -204,7 +204,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
               <GraduationCap size={13} /> Academic Branch & Year
             </span>
             <p style={{ fontSize: '13px', color: '#0f172a', fontWeight: '600', marginTop: '3px' }}>
-              {participant.branch} (Year {participant.year})
+              {participant.branch} ({formatYear(participant.year)})
             </p>
           </div>
 
