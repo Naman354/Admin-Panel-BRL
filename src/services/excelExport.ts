@@ -36,7 +36,6 @@ export function exportParticipantsToExcel(
       'Academic Year': formatYear(getParticipantYear(p)),
       'Gender': p.gender,
       'Residency Type': p.residency,
-      'Category': p.category || 'Student',
       'Attendance Status': p.attendance.marked ? 'PRESENT' : 'ABSENT',
       'Attendance Timestamp': attendanceTimeStr,
       'Check-in Method': p.attendance.markedMethod || 'N/A',
@@ -59,7 +58,6 @@ export function exportParticipantsToExcel(
     { wch: 14 }, // Year
     { wch: 10 }, // Gender
     { wch: 14 }, // Residency
-    { wch: 12 }, // Category
     { wch: 16 }, // Attendance Status
     { wch: 24 }, // Timestamp
     { wch: 16 }, // Method
