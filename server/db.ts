@@ -294,6 +294,26 @@ export async function toggleAttendance(identifier: string, marked: boolean) {
   return mapRegistrationDoc(participant.toObject());
 }
 
+export async function deleteParticipant(identifier: string) {
+  const cleanId = identifier.trim();
+
+  const query: any = {
+    $or: [
+      { studentNo: { $regex: new RegExp(`^${cleanId}$`, 'i') } },
+      { rollNo: { $regex: new RegExp(`^${cleanId}$`, 'i') } },
+      { studentNumber: { $regex: new RegExp(`^${cleanId}$`, 'i') } },
+      { barcode: { $regex: new RegExp(`^${cleanId}$`, 'i') } },
+    ],
+  };
+
+  if (mongoose.Types.ObjectId.isValid(cleanId)) {
+    query.$or.push({ _id: new mongoose.Types.ObjectId(cleanId) });
+  }
+
+  const deleted = await RegistrationModel.findOneAndDelete(query).lean();
+  return deleted ? mapRegistrationDoc(deleted) : null;
+}
+
 export async function addParticipant(data: any) {
   const studentNo = data.studentNumber || data.studentNo || data.rollNo;
   const isHostel = data.residency === 'Hosteler' || data.hosteller === true;

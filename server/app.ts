@@ -10,6 +10,7 @@ import {
   markAttendance,
   toggleAttendance,
   addParticipant,
+  deleteParticipant,
   getMetricsData,
   getYearFromStudent,
 } from './db.js';
@@ -172,6 +173,29 @@ router.post('/participants', verifyAdminToken, async (req: Request, res: Respons
     });
 
     res.status(201).json({ success: true, data: newParticipant });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// 7. Delete Participant
+router.delete('/participants/:identifier', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const { identifier } = req.params;
+    if (!identifier) {
+      return res.status(400).json({ success: false, message: 'Student identifier is required' });
+    }
+
+    const deleted = await deleteParticipant(identifier);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Participant not found or already deleted' });
+    }
+
+    res.json({
+      success: true,
+      message: `Student entry for ${deleted.fullName} (${deleted.studentNumber}) was successfully deleted`,
+      data: deleted,
+    });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }

@@ -9,6 +9,9 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
+  Trash2,
+  AlertTriangle,
+  X,
 } from 'lucide-react';
 import { Participant, formatYear, getParticipantYear } from '../types';
 import { api } from '../services/api';
@@ -27,6 +30,10 @@ export const ParticipantsPage: React.FC = () => {
 
   // Modals state
   const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
+  const [participantToDelete, setParticipantToDelete] = useState<Participant | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -153,9 +160,122 @@ export const ParticipantsPage: React.FC = () => {
     }
   };
 
+  const handleDeleteClick = (participant: Participant) => {
+    setDeleteError(null);
+    setParticipantToDelete(participant);
+  };
+
+  const handleCancelDelete = () => {
+    if (isDeleting) return;
+    setParticipantToDelete(null);
+    setDeleteError(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!participantToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      setDeleteError(null);
+
+      const targetId =
+        participantToDelete.studentNumber ||
+        participantToDelete._id ||
+        participantToDelete.rollNo ||
+        participantToDelete.barcode;
+
+      if (!targetId) {
+        throw new Error('Student identifier not found for deletion.');
+      }
+
+      await api.deleteParticipant(targetId);
+
+      // Remove student from state
+      setParticipants((prev) =>
+        prev.filter(
+          (p) =>
+            p.studentNumber !== participantToDelete.studentNumber &&
+            (!participantToDelete._id || p._id !== participantToDelete._id)
+        )
+      );
+
+      // If details modal was open for this participant, close it
+      if (
+        selectedParticipant &&
+        (selectedParticipant.studentNumber === participantToDelete.studentNumber ||
+          (participantToDelete._id && selectedParticipant._id === participantToDelete._id))
+      ) {
+        setSelectedParticipant(null);
+      }
+
+      const deletedName = participantToDelete.fullName;
+      const deletedId = participantToDelete.studentNumber;
+
+      setParticipantToDelete(null);
+      setFeedbackMessage({
+        type: 'success',
+        text: `Student "${deletedName}" (${deletedId}) was successfully deleted.`,
+      });
+
+      // Auto clear feedback after 4.5 seconds
+      setTimeout(() => {
+        setFeedbackMessage((prev) => (prev?.text.includes(deletedId) ? null : prev));
+      }, 4500);
+    } catch (err: any) {
+      console.error('Failed to delete participant:', err);
+      setDeleteError(err?.message || 'Failed to delete student entry. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* Feedback Banner */}
+      {feedbackMessage && (
+        <div
+          style={{
+            padding: '12px 18px',
+            borderRadius: '12px',
+            background: feedbackMessage.type === 'success' ? '#ecfdf5' : '#fef2f2',
+            border: `1px solid ${feedbackMessage.type === 'success' ? '#a7f3d0' : '#fecdd3'}`,
+            color: feedbackMessage.type === 'success' ? '#065f46' : '#991b1b',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            fontSize: '13px',
+            fontWeight: '600',
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {feedbackMessage.type === 'success' ? (
+              <CheckCircle2 size={18} color="#059669" />
+            ) : (
+              <AlertTriangle size={18} color="#e11d48" />
+            )}
+            <span>{feedbackMessage.text}</span>
+          </div>
+          <button
+            onClick={() => setFeedbackMessage(null)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+              padding: '2px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            aria-label="Dismiss message"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       {/* Header Bar */}
       <div
         className="glass-card"
@@ -539,6 +659,36 @@ export const ParticipantsPage: React.FC = () => {
                           >
                             {isPresent ? 'Undo' : 'Check In'}
                           </button>
+
+                          <button
+                            onClick={() => handleDeleteClick(p)}
+                            title="Delete student entry"
+                            className="btn btn-icon"
+                            style={{
+                              padding: '7px',
+                              background: '#fef2f2',
+                              border: '1px solid #fecdd3',
+                              color: '#e11d48',
+                              cursor: 'pointer',
+                              borderRadius: '10px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#fee2e2';
+                              e.currentTarget.style.borderColor = '#fca5a5';
+                              e.currentTarget.style.color = '#be123c';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#fef2f2';
+                              e.currentTarget.style.borderColor = '#fecdd3';
+                              e.currentTarget.style.color = '#e11d48';
+                            }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -612,7 +762,232 @@ export const ParticipantsPage: React.FC = () => {
         participant={selectedParticipant}
         onClose={() => setSelectedParticipant(null)}
         onToggleAttendance={handleToggleAttendance}
+        onDelete={(participant) => {
+          setSelectedParticipant(null);
+          handleDeleteClick(participant);
+        }}
       />
+
+      {/* Confirmation Modal Dialog for Student Deletion */}
+      {participantToDelete && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.45)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 120,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+          }}
+          onClick={handleCancelDelete}
+        >
+          <div
+            className="glass-card"
+            style={{
+              width: '100%',
+              maxWidth: '480px',
+              background: '#ffffff',
+              border: '1px solid #fee2e2',
+              borderRadius: '20px',
+              padding: '28px',
+              position: 'relative',
+              boxShadow: '0 25px 50px -12px rgba(225, 29, 72, 0.18)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={handleCancelDelete}
+              disabled={isDeleting}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: '#f1f5f9',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#64748b',
+                cursor: isDeleting ? 'not-allowed' : 'pointer',
+              }}
+              title="Cancel"
+            >
+              <X size={16} />
+            </button>
+
+            {/* Warning Icon & Header */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '18px' }}>
+              <div
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '14px',
+                  background: '#fee2e2',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#e11d48',
+                  flexShrink: 0,
+                }}
+              >
+                <Trash2 size={24} />
+              </div>
+              <div style={{ paddingRight: '20px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
+                  Delete Student Entry
+                </h3>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0', lineHeight: 1.4 }}>
+                  Are you sure you want to permanently delete this student record? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            {/* Student Preview Details Card */}
+            <div
+              style={{
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '14px 16px',
+                marginBottom: '18px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>Student Name</span>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: '#0f172a' }}>
+                  {participantToDelete.fullName}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>Student Number</span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: '#0369a1',
+                    background: '#e0f2fe',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                  }}
+                >
+                  {participantToDelete.studentNumber}
+                </span>
+              </div>
+
+              {participantToDelete.rollNo && participantToDelete.rollNo !== participantToDelete.studentNumber && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>University Roll</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#334155' }}>
+                    {participantToDelete.rollNo}
+                  </span>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>Branch & Year</span>
+                <span style={{ fontSize: '12px', color: '#334155', fontWeight: '600' }}>
+                  {participantToDelete.branch} • {formatYear(getParticipantYear(participantToDelete))}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>Check-in Status</span>
+                <span
+                  className={`badge ${participantToDelete.attendance?.marked ? 'badge-present' : 'badge-absent'}`}
+                  style={{ fontSize: '11px' }}
+                >
+                  {participantToDelete.attendance?.marked ? 'Checked In' : 'Not Checked In'}
+                </span>
+              </div>
+            </div>
+
+            {/* Error Message Alert (if any) */}
+            {deleteError && (
+              <div
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  background: '#fef2f2',
+                  border: '1px solid #fecdd3',
+                  color: '#e11d48',
+                  fontSize: '12px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <AlertTriangle size={15} style={{ flexShrink: 0 }} />
+                <span>{deleteError}</span>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                onClick={handleCancelDelete}
+                disabled={isDeleting}
+                className="btn btn-secondary"
+                style={{ padding: '10px 18px', fontSize: '13px' }}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="btn"
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '13px',
+                  background: isDeleting ? '#fda4af' : '#e11d48',
+                  color: '#ffffff',
+                  boxShadow: '0 2px 8px rgba(225, 29, 72, 0.25)',
+                  cursor: isDeleting ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                {isDeleting ? (
+                  <>
+                    <div
+                      style={{
+                        width: '14px',
+                        height: '14px',
+                        borderRadius: '50%',
+                        border: '2px solid #ffffff',
+                        borderTopColor: 'transparent',
+                        animation: 'spin 0.8s linear infinite',
+                      }}
+                    />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={15} />
+                    <span>Confirm Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

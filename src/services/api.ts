@@ -86,6 +86,15 @@ export const api = {
     return res.data;
   },
 
+  async deleteParticipant(identifier: string): Promise<{ success: boolean; message: string; data?: Participant }> {
+    return request<{ success: boolean; message: string; data?: Participant }>(
+      `/participants/${encodeURIComponent(identifier)}`,
+      {
+        method: 'DELETE',
+      }
+    );
+  },
+
   // Attendance
   async markAttendance(identifier: string, method: 'BARCODE' | 'MANUAL' = 'BARCODE'): Promise<AttendanceResult> {
     try {

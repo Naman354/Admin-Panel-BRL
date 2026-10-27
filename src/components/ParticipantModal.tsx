@@ -8,6 +8,7 @@ import {
   Home,
   CheckCircle2,
   Shirt,
+  Trash2,
 } from 'lucide-react';
 import { Participant, formatYear, getParticipantYear } from '../types';
 
@@ -15,12 +16,14 @@ interface ParticipantModalProps {
   participant: Participant | null;
   onClose: () => void;
   onToggleAttendance: (identifier: string, currentStatus: boolean) => void;
+  onDelete?: (participant: Participant) => void;
 }
 
 export const ParticipantModal: React.FC<ParticipantModalProps> = ({
   participant,
   onClose,
   onToggleAttendance,
+  onDelete,
 }) => {
   if (!participant) return null;
 
@@ -277,15 +280,35 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
         )}
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <button
             onClick={() => onToggleAttendance(participant.studentNumber, isPresent)}
             className={`btn ${isPresent ? 'btn-danger' : 'btn-success'}`}
-            style={{ flex: 1, padding: '12px' }}
+            style={{ flex: 1, padding: '12px', minWidth: '160px' }}
           >
             <CheckCircle2 size={18} />
             <span>{isPresent ? 'Undo Check-in' : 'Mark as Checked In'}</span>
           </button>
+
+          {onDelete && (
+            <button
+              onClick={() => onDelete(participant)}
+              className="btn btn-secondary"
+              style={{
+                padding: '12px 16px',
+                color: '#e11d48',
+                borderColor: '#fecdd3',
+                background: '#fef2f2',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+              title="Delete student entry"
+            >
+              <Trash2 size={16} />
+              <span>Delete</span>
+            </button>
+          )}
 
           <button onClick={onClose} className="btn btn-secondary" style={{ padding: '12px 20px' }}>
             Close
