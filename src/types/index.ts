@@ -51,6 +51,59 @@ export interface Participant {
   registeredAt: string;
 }
 
+export function isParticipantPresent(p?: any): boolean {
+  if (!p) return false;
+
+  const truthyStrings = new Set([
+    'true',
+    'present',
+    'yes',
+    'y',
+    '1',
+    'marked',
+    'attended',
+    'checked-in',
+    'checkedin',
+    'checkin',
+    'checked_in',
+    'p',
+    'success',
+  ]);
+
+  if (p.attendance) {
+    if (typeof p.attendance === 'boolean') return p.attendance;
+    if (typeof p.attendance === 'string') {
+      const s = p.attendance.trim().toLowerCase();
+      if (truthyStrings.has(s)) return true;
+    }
+    if (typeof p.attendance === 'object') {
+      if (typeof p.attendance.marked === 'boolean') return p.attendance.marked;
+      if (p.attendance.present || p.attendance.isPresent || p.attendance.attended || p.attendance.checkedIn) return true;
+      if (typeof p.attendance.status === 'string' && truthyStrings.has(p.attendance.status.trim().toLowerCase())) return true;
+    }
+  }
+
+  if (p.isPresent === true || p.present === true || p.attended === true || p.checkedIn === true) return true;
+  if (typeof p.status === 'string' && truthyStrings.has(p.status.trim().toLowerCase())) return true;
+  if (typeof p.attendanceStatus === 'string' && truthyStrings.has(p.attendanceStatus.trim().toLowerCase())) return true;
+
+  return Boolean(p.attendance?.marked);
+}
+
+export interface TimelineItem {
+  date: string;
+  count: number;
+  time?: string;
+  day?: string;
+  cumulative?: number;
+}
+
+export interface OtherDaySummary {
+  date: string;
+  label: string;
+  count: number;
+}
+
 export interface MetricsData {
   overview: {
     totalRegistrations: number;
@@ -83,10 +136,10 @@ export interface MetricsData {
     percentage: number;
   }[];
   recentCheckIns: Participant[];
-  timeline: {
-    date: string;
-    count: number;
-  }[];
+  timeline: TimelineItem[];
+  otherDaysSummary?: OtherDaySummary[];
+  otherDaysTotal?: number;
+  peakDaysTotal?: number;
 }
 
 export interface AttendanceResult {

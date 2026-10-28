@@ -14,15 +14,19 @@ export interface IRegistration extends Document {
   gender: string;
   hosteller?: boolean;
   residency?: string;
-  isPresent?: boolean;
+  isPresent?: any;
+  present?: any;
+  attended?: any;
+  checkedIn?: any;
+  checkIn?: any;
+  status?: string;
+  attendanceStatus?: string;
   lastMarkedAt?: Date | null;
-  markedMethod?: 'BARCODE' | 'MANUAL' | null;
-  attendance?: {
-    marked: boolean;
-    markedAt: Date | null;
-    markedMethod: 'BARCODE' | 'MANUAL' | null;
-    markedBy: string | null;
-  };
+  markedAt?: Date | null;
+  checkInTime?: Date | null;
+  checkedInAt?: Date | null;
+  markedMethod?: 'BARCODE' | 'MANUAL' | null | string;
+  attendance?: any;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -42,21 +46,17 @@ const RegistrationSchema: Schema = new Schema(
     gender: { type: String, default: 'Male' },
     hosteller: { type: Boolean, default: false },
     residency: { type: String },
-    isPresent: { type: Boolean, default: false },
-    lastMarkedAt: { type: Date, default: null },
-    markedMethod: { type: String, enum: ['BARCODE', 'MANUAL', null], default: null },
-    attendance: {
-      marked: { type: Boolean, default: false },
-      markedAt: { type: Date, default: null },
-      markedMethod: { type: String, enum: ['BARCODE', 'MANUAL', null], default: null },
-      markedBy: { type: String, default: null },
-    },
+    isPresent: { type: Schema.Types.Mixed, default: false },
+    lastMarkedAt: { type: Schema.Types.Mixed, default: null },
+    markedMethod: { type: Schema.Types.Mixed, default: null },
+    attendance: { type: Schema.Types.Mixed, default: null },
   },
   {
     timestamps: true,
-    strict: false, // allow flexible fields from external registrations portal
+    strict: false, // allow flexible fields from external registrations portal & other attendance sources
     collection: 'registrations', // target the actual registrations collection
   }
 );
 
 export const RegistrationModel = mongoose.model<IRegistration>('Registration', RegistrationSchema);
+

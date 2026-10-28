@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { Participant, formatYear, getParticipantYear } from '../types';
+import { Participant, formatYear, getParticipantYear, isParticipantPresent } from '../types';
 
 export function exportParticipantsToExcel(
   participants: Participant[],
@@ -7,22 +7,27 @@ export function exportParticipantsToExcel(
 ) {
   // Format data for Excel worksheet
   const formattedData = participants.map((p, index) => {
+    const isPresent = isParticipantPresent(p);
     let attendanceTimeStr = 'N/A';
-    if (p.attendance.marked && p.attendance.markedAt) {
+    if (isPresent && p.attendance?.markedAt) {
       const d = new Date(p.attendance.markedAt);
-      attendanceTimeStr = d.toLocaleString('en-US', {
-        dateStyle: 'medium',
-        timeStyle: 'medium',
-      });
+      if (!isNaN(d.getTime())) {
+        attendanceTimeStr = d.toLocaleString('en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'medium',
+        });
+      }
     }
 
     let registeredTimeStr = 'N/A';
     if (p.registeredAt) {
       const d = new Date(p.registeredAt);
-      registeredTimeStr = d.toLocaleString('en-US', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      });
+      if (!isNaN(d.getTime())) {
+        registeredTimeStr = d.toLocaleString('en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        });
+      }
     }
 
     return {
@@ -36,9 +41,9 @@ export function exportParticipantsToExcel(
       'Academic Year': formatYear(getParticipantYear(p)),
       'Gender': p.gender,
       'Residency Type': p.residency,
-      'Attendance Status': p.attendance.marked ? 'PRESENT' : 'ABSENT',
+      'Attendance Status': isPresent ? 'PRESENT' : 'ABSENT',
       'Attendance Timestamp': attendanceTimeStr,
-      'Check-in Method': p.attendance.markedMethod || 'N/A',
+      'Check-in Method': p.attendance?.markedMethod || (isPresent ? 'BARCODE' : 'N/A'),
       'Registration Date': registeredTimeStr,
     };
   });

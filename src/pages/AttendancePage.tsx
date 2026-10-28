@@ -10,7 +10,7 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { Participant, AttendanceResult, formatYear, getParticipantYear } from '../types';
+import { Participant, AttendanceResult, formatYear, getParticipantYear, isParticipantPresent } from '../types';
 import { api } from '../services/api';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { playSuccessChime, playWarningBuzzer } from '../services/audioEffects';
@@ -28,11 +28,11 @@ export const AttendancePage: React.FC = () => {
     try {
       const participants = await api.getParticipants();
       const total = participants.length;
-      const present = participants.filter((p) => p.attendance?.marked).length;
+      const present = participants.filter((p) => isParticipantPresent(p)).length;
       setStats({ total, present });
 
       const sorted = participants
-        .filter((p) => p.attendance?.marked && p.attendance.markedAt)
+        .filter((p) => isParticipantPresent(p) && p.attendance?.markedAt)
         .sort((a, b) => new Date(b.attendance.markedAt!).getTime() - new Date(a.attendance.markedAt!).getTime())
         .slice(0, 8);
       setRecentScans(sorted);

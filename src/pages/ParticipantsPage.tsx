@@ -13,7 +13,7 @@ import {
   AlertTriangle,
   X,
 } from 'lucide-react';
-import { Participant, formatYear, getParticipantYear } from '../types';
+import { Participant, formatYear, getParticipantYear, isParticipantPresent } from '../types';
 import { api } from '../services/api';
 import { exportParticipantsToExcel } from '../services/excelExport';
 import { ParticipantModal } from '../components/ParticipantModal';
@@ -94,8 +94,8 @@ export const ParticipantsPage: React.FC = () => {
 
       // Attendance
       if (selectedAttendance !== 'All') {
-        const isPresent = selectedAttendance === 'Present';
-        if (p.attendance.marked !== isPresent) return false;
+        const targetPresent = selectedAttendance === 'Present';
+        if (isParticipantPresent(p) !== targetPresent) return false;
       }
 
       return true;
@@ -517,7 +517,7 @@ export const ParticipantsPage: React.FC = () => {
                 </tr>
               ) : (
                 paginatedParticipants.map((p) => {
-                  const isPresent = p.attendance?.marked;
+                  const isPresent = isParticipantPresent(p);
 
                   return (
                     <tr key={p.studentNumber || p._id}>

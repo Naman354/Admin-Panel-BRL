@@ -204,7 +204,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
       {/* Row 4: Registration Timeline & Recent Check-ins */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '20px' }}>
-        <RegistrationTimelineChart data={metrics.timeline} />
+        <RegistrationTimelineChart
+          data={metrics.timeline}
+          otherDays={metrics.otherDaysSummary}
+          otherDaysTotal={metrics.otherDaysTotal}
+          peakDaysTotal={metrics.peakDaysTotal}
+        />
 
         {/* Live Recent Check-ins Feed */}
         <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: '#ffffff' }}>

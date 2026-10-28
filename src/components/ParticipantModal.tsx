@@ -10,7 +10,7 @@ import {
   Shirt,
   Trash2,
 } from 'lucide-react';
-import { Participant, formatYear, getParticipantYear } from '../types';
+import { Participant, formatYear, getParticipantYear, isParticipantPresent } from '../types';
 
 interface ParticipantModalProps {
   participant: Participant | null;
@@ -27,7 +27,7 @@ export const ParticipantModal: React.FC<ParticipantModalProps> = ({
 }) => {
   if (!participant) return null;
 
-  const isPresent = participant.attendance?.marked;
+  const isPresent = isParticipantPresent(participant);
 
   return (
     <div
